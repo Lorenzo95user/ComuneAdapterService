@@ -8,20 +8,21 @@ import it.newtech.comuneadapterservice.domain.model.ComuneDto;
 
 
 
-public interface PortIn {
-	
-	public List<ComuneDto> getComuneAll();
-	
+public interface ComuneRepository {
+
+	public List<ComuneDto> getAllComune();
+
 	public List<String> getRegioni();
-	
-	public List<String> getProvince(String regione);
-	
-	public List<String> getComuni(String provincia);
-	
+
+	public List<String> getProvince(String Regione);
+
+	public List<String> getComuni(String Provincia);
+
 	public List<String> getCapByComune(String comune);
 	
 	public List<String> getSiglaByComune ( String comune);
 	
 	public List<String> getAllProvince();
-
+	
+	public List<ComuneDto> searchByComune(String q);
 }

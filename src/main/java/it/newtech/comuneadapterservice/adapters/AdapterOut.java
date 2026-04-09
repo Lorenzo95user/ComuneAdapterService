@@ -9,7 +9,7 @@ import org.springframework.web.client.RestClient;
 
 import it.newtech.comuneadapterservice.domain.model.Comune;
 import it.newtech.comuneadapterservice.domain.model.ComuneDto;
-import it.newtech.comuneadapterservice.domain.ports.PortOut;
+import it.newtech.comuneadapterservice.domain.ports.ComuneRepository;
 import it.newtech.comuneadapterservice.mapper.Mapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @AllArgsConstructor
 @Slf4j
-public class AdapterOut implements PortOut {
+public class AdapterOut implements ComuneRepository {
 
 	private final RestClient restClient;
 	private Mapper mapper;
@@ -71,7 +71,7 @@ public class AdapterOut implements PortOut {
 	public List<String> getProvince(String regione) {
 		try {
 			var province = restClient.get()
-					.uri(uriBuilder -> uriBuilder.path("/province").queryParam("regione", regione).build()).retrieve()
+					.uri(uriBuilder -> uriBuilder.path("/provincia").queryParam("regione", regione).build()).retrieve()
 					.body(new ParameterizedTypeReference<List<String>>() {
 					});
 			int totale = province.size();
@@ -126,7 +126,7 @@ public class AdapterOut implements PortOut {
 	@Override
 	public List<String> getCapByComune(String comune) {
 		try {
-			var cap = restClient.get().uri(uriBuilder -> uriBuilder.path("/find/cap").queryParam("nome",comune)
+			var cap = restClient.get().uri(uriBuilder -> uriBuilder.path("/cap/comune").queryParam("nome",comune)
 					.build()).retrieve().body(new ParameterizedTypeReference <List<String>>() {});
 			if(cap.isEmpty()) {
 				log.warn("Nessun Comune trovato da servizio web");
@@ -145,7 +145,7 @@ public class AdapterOut implements PortOut {
 	@Override
 	public List<String> getSiglaByComune(String comune) {
 		try {
-			var sigla = restClient.get().uri(uriBuilder -> uriBuilder.path("/find/sigla").queryParam("nome",comune)
+			var sigla = restClient.get().uri(uriBuilder -> uriBuilder.path("/sigla/comune").queryParam("nome",comune)
 					.build()).retrieve().body(new ParameterizedTypeReference <List<String>>(){});
 			if(sigla.isEmpty()) {
 				log.warn("Nessun Comune trovato da servizio web");
@@ -159,6 +159,29 @@ public class AdapterOut implements PortOut {
 			log.error("Error : {}", e);
 			return List.of();
 		}
+	}
+
+	@Override
+	public List<ComuneDto> searchByComune(String q) {
+		try {
+			List<ComuneDto> comuni = restClient.get().uri(uriBUilder->uriBUilder.path("/comune").queryParam("q",q).build()).retrieve().body(new ParameterizedTypeReference<List<ComuneDto>>() {});
+			if(comuni.isEmpty()) {
+				log.warn("Nessun Comune trovato da servizio web");
+				return List.of();
+			}
+			StringBuilder sb = new StringBuilder("\n----- COMUNI TROVATI -----\n");
+			comuni.forEach(dto -> {
+				sb.append("NOME : ").append(dto.getNome()).append(" , ").append("PROVINCIA : ").append(dto.getProvincia())
+						.append(" , ").append("SIGLA : ").append(dto.getSigla()).append(" , ").append("CAP : ")
+						.append(dto.getCap()).append(" , ").append("ISTAT : ").append(dto.getIstat()).append(" \n");
+			});
+			log.debug("Comuni trovati da {}: \n{}", q, sb.toString());
+			return comuni;
+		}catch(Exception e) {
+			log.error("Error : {}", e);
+			return List.of();
+		}
+		
 	}
 
 }

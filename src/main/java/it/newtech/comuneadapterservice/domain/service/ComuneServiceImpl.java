@@ -7,17 +7,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import it.newtech.comuneadapterservice.domain.model.ComuneDto;
-import it.newtech.comuneadapterservice.domain.ports.PortIn;
-import it.newtech.comuneadapterservice.domain.ports.PortOut;
+import it.newtech.comuneadapterservice.domain.ports.ComuneRepository;
+import it.newtech.comuneadapterservice.domain.ports.ComuneService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ComuneService implements PortIn {
+public class ComuneServiceImpl implements ComuneService {
 
-	private final PortOut port;
+	private final ComuneRepository port;
 
 	@Override
 	public List<ComuneDto> getComuneAll() {
@@ -78,6 +78,14 @@ public class ComuneService implements PortIn {
 		if(province.isEmpty()) {
 			throw new ResourceNotFound("Province non trovate");
 		}return province;
+	}
+
+	@Override
+	public List<ComuneDto> searchByComune(String q) {
+		var comuni = port.searchByComune(q);
+		if(comuni.isEmpty())
+			throw new ResourceNotFound("Comune non trovato");
+		return comuni;
 	}
 	
 }
