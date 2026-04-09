@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.newtech</groupId>
 	<artifactId>ComuneAdapterService</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>projects</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
