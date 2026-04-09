@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ComuneServiceImpl implements ComuneService {
 
-	private final ComuneRepository port;
+	private final ComuneRepository comuneRepository;
 
 	@Override
 	public List<ComuneDto> getComuneAll() {
 
-		var comuni = port.getAllComune();
+		var comuni = comuneRepository.getAllComune();
 		if (comuni.isEmpty()) {
 			throw new ResourceNotFound("Nessun comune trovato");
 		}
@@ -31,7 +31,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<String> getRegioni() {
-		var regioni = port.getRegioni();
+		var regioni = comuneRepository.getRegioni();
 		if (regioni.isEmpty()) {
 			throw new ResourceNotFound("Nessuna Regione trovata");
 		}
@@ -40,7 +40,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<String> getProvince(String regione) {
-		var provincie = port.getProvince(regione);
+		var provincie = comuneRepository.getProvince(regione);
 		if (provincie.isEmpty()) {
 			throw new ResourceNotFound("Nessuna Provincia trovata per la Regione " + regione);
 		}
@@ -49,7 +49,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<String> getComuni(String provincia) {
-		var comuni = port.getComuni(provincia);
+		var comuni = comuneRepository.getComuni(provincia);
 		if (comuni.isEmpty()) {
 			throw new ResourceNotFound("Nessun Comune trovato per la Provincia " + provincia);
 		}
@@ -58,7 +58,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<String> getCapByComune(String comune) {
-		var cap = port.getCapByComune(comune);
+		var cap = comuneRepository.getCapByComune(comune);
 		if(cap.isEmpty()) {
 			throw new ResourceNotFound("Comune "+ comune + " non trovato");
 		}return cap;
@@ -66,7 +66,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<String> getSiglaByComune(String comune) {
-		var sigla = port.getSiglaByComune(comune);
+		var sigla = comuneRepository.getSiglaByComune(comune);
 		if(sigla.isEmpty()) {
 			throw new ResourceNotFound("Comune "+ comune + " non trovato");
 		}return sigla;
@@ -74,7 +74,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<String> getAllProvince() {
-		var province = port.getAllProvince();
+		var province = comuneRepository.getAllProvince();
 		if(province.isEmpty()) {
 			throw new ResourceNotFound("Province non trovate");
 		}return province;
@@ -82,7 +82,7 @@ public class ComuneServiceImpl implements ComuneService {
 
 	@Override
 	public List<ComuneDto> searchByComune(String q) {
-		var comuni = port.searchByComune(q);
+		var comuni = comuneRepository.searchByComune(q);
 		if(comuni.isEmpty())
 			throw new ResourceNotFound("Comune non trovato");
 		return comuni;
